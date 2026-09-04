@@ -128,6 +128,10 @@ def index():
     quote = get_random_quote()
     return render_template('index.html', quote=quote)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     file = request.files.get('image')
