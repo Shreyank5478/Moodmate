@@ -8,7 +8,7 @@
     <style>
         
         body {
-            background: url(/static/images/background.jpg) no-repeat center center fixed;
+            background: url(https://i.pinimg.com/1200x/71/27/f2/7127f25d62a73125660d5546dc93ddac.jpg) no-repeat center center fixed;
             background-size: cover;
             color: white;
         }
@@ -80,18 +80,27 @@
     <div class="container mt-4">
         <h1 class="display-4">Your Mood is:</h1>
         <div class="alert alert-info mt-3">
-            <strong>We couldn't detect your mood. Please try another image.</strong>
+            <strong>{{ mood }}</strong>
         </div>
+
+        <img class="img-fluid rounded-4 mt-3" src="data:image/jpeg;base64,{{ image_data }}" alt="Analyzed photo" style="max-height: 420px;">
 
         <h2 class="mt-4">Motivational Message:</h2>
         <div class="alert alert-success mt-3">
-            Keep going! Every day is a new opportunity—try uploading another image to discover more motivation.
+            {{ message }}
         </div>
 
         <!-- 🎵 Music Recommendation -->
         <div class="card">
             <h3>🎵 Music Recommendation</h3>
-            <p>No music recommendation could be generated from your image. Please try uploading a different image for a personalized suggestion.</p>
+            <p>{{ music }}</p>
+
+            {% if spotify_embed_url %}
+            <iframe class="mt-3" style="border-radius:12px" src="{{ spotify_embed_url }}" width="100%" height="80"
+                frameborder="0" allowfullscreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% endif %}
 
             <!-- Optional: Embed Spotify iframe if available -->
             <!-- Example static embed, remove if not needed -->
