@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mood History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: url(https://i.pinimg.com/1200x/71/27/f2/7127f25d62a73125660d5546dc93ddac.jpg) no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(120deg, rgba(0,188,212,0.18) 0%, rgba(0,0,0,0.55) 100%);
+            z-index: -1;
+        }
+        .glass-card {
+            background: rgba(30, 40, 80, 0.32);
+            border: 1.5px solid rgba(0,188,212,0.25);
+            border-radius: 28px;
+            box-shadow: 0 12px 48px 0 rgba(0,188,212,0.18), 0 1.5px 8px 0 rgba(0,0,0,0.12);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            margin-top: 3rem;
+            border-top: 2.5px solid rgba(0,188,212,0.35);
+            border-bottom: 2.5px solid rgba(0,188,212,0.12);
+    /* NEW: subtle glow and border edge */
+            box-shadow:
+            0 0 18px rgba(0, 188, 212, 0.18),
+            0 4px 12px rgba(0, 188, 212, 0.1),
+            inset 0 0 6px rgba(255, 255, 255, 0.03);
+        }
+
+        .table thead th {
+            background: rgba(0,188,212,0.22);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            letter-spacing: 0.03em;
+        }
+        .table tbody tr {
+            background: rgba(255,255,255,0.07);
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .table tbody tr:hover {
+            background: rgba(0,188,212,0.13);
+            box-shadow: 0 2px 12px rgba(0,188,212,0.08);
+        }
+        .table tbody td {
+            border: none;
+        }
+        .navbar {
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 2px 16px rgba(0,188,212,0.10);
+        }
+        .btn-custom {
+            background: linear-gradient(90deg, #00bcd4 60%, #2196f3 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 12px 32px;
+            margin-top: 2rem;
+            box-shadow: 0 2px 12px rgba(0,188,212,0.18);
+            transition: 0.3s;
+        }
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #2196f3 0%, #00bcd4 100%);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(0,188,212,0.25);
+        }
+        .mood-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 2.2rem;
+            font-size: 1.18rem;
+        }
+        .mood-summary .badge {
+            font-size: 1.13rem;
+            padding: 0.7em 1.3em;
+            background: linear-gradient(90deg, rgba(0,188,212,0.22) 60%, rgba(33,150,243,0.18) 100%);
+            color: #fff;
+            border-radius: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            box-shadow: 0 1px 8px rgba(0,188,212,0.10);
+            border: 1.5px solid rgba(0,188,212,0.18);
+        }
+        .emoji-col {
+            font-size: 1.7rem;
+            text-align: center;
+            filter: drop-shadow(0 1px 2px #00bcd4cc);
+        }
+        .recent-row {
+            background: linear-gradient(90deg, rgba(0,188,212,0.22) 0%, rgba(33,150,243,0.13) 100%) !important;
+            font-weight: 700;
+            color: #fff !important;
+            box-shadow: 0 2px 16px rgba(0,188,212,0.10);
+        }
+        .music-link {
+            color: #00e6ff;
+            text-decoration: underline;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .music-link:hover {
+            color: #fff;
+            text-shadow: 0 0 8px #00e6ff;
+        }
+        @media (max-width: 900px) {
+            .glass-card { padding: 1.2rem 0.5rem; }
+            .table-responsive { font-size: 0.97rem; }
+        @media (max-width: 600px) {
+            .history-cards { display: block; }
+        }
+        @media (min-width: 601px) {
+            .history-cards { display: none; }
+        }
+        }
+        .history-card {
+            background: rgba(30, 40, 80, 0.32);
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,188,212,0.10);
+            margin-bottom: 1.2rem;
+            padding: 1.2rem 1rem;
+            color: #fff;
+            border: 1.5px solid rgba(0,188,212,0.13);
+            backdrop-filter: blur(10px) saturate(1.2);
+        }
+        .history-card .emoji-col { font-size: 2rem; }
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #ff5252;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .delete-btn:hover { color: #ff1744; transform: scale(1.2); }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand text-info fw-bold" href="/">🐻 MoodMate</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown">
+                        More
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/history">Mood History</a></li>
+                        <li><a class="dropdown-item" href="#">About</a></li>
+                        <li><a class="dropdown-item" href="https://github.com/Shreyank5478/Moodmate" target="_blank">GitHub Repo</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="glass-card mx-auto mt-5" style="max-width: 950px;">
+            <h1 class="mb-4 fw-bold">Your Mood History</h1>
+            <!-- Mood summary -->
+            <div class="mood-summary">
+                {% for mood, count in mood_stats.items() %}
+                    <span class="badge"><span class="me-1">{{ mood_emojis.get(mood, '') }}</span> {{ mood|capitalize }}: {{ count }}</span>
+                {% endfor %}
+            </div>
+            <div class="table-responsive d-none d-sm-block">
+                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Timestamp</th>
+                            <th>Emoji</th>
+                            <th>Emotion</th>
+                            <th>Message</th>
+                            <th>Music</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in history %}
+                        <tr class="{% if loop.first %}recent-row{% endif %}">
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1][:10] }}<br><span style="font-size:0.95em; color:#b2ebf2;">{{ row[1][11:16] }}</span></td>
+                            <td class="emoji-col">{{ mood_emojis.get(row[2], '❓') }}</td>
+                            <td>{{ row[2]|capitalize }}</td>
+                            <td>{% if row[4] %}{{ row[4] }}{% else %}—{% endif %}</td>
+                            <td>
+                                {% if spotify_tracks.get(row[0]) %}
+                                    <a class="music-link" href="{{ spotify_tracks[row[0]][0][1] }}" target="_blank">{{ spotify_tracks[row[0]][0][0] }}</a>
+                                {% elif row[2] and spotify_tracks.get(row[2]) %}
+                                    <a class="music-link" href="{{ spotify_tracks[row[2]][0][1] }}" target="_blank">{{ spotify_tracks[row[2]][0][0] }}</a>
+                                {% else %}—{% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="/delete_history/{{ row[0] }}" style="display:inline;">
+                                    <button type="submit" class="delete-btn" title="Delete"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="history-cards d-block d-sm-none">
+            <div class="history-cards">
+                {% for row in history %}
+                <div class="history-card {% if loop.first %}recent-row{% endif %}">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="emoji-col me-2">{{ mood_emojis.get(row[2], '❓') }}</span>
+                        <span class="fw-bold">{{ row[2]|capitalize }}</span>
+                        <span class="ms-auto small text-info">#{{ row[0] }}</span>
+                    </div>
+                    <div class="mb-1"><span class="fw-semibold">Date:</span> {{ row[1][:10] }} <span class="text-info">{{ row[1][11:16] }}</span></div>
+                    <div class="mb-1"><span class="fw-semibold">Message:</span> {% if row[2] %}{{ messages.get(row[2], '—') }}{% else %}—{% endif %}</div>
+                    <div class="mb-1"><span class="fw-semibold">Music:</span> {% if row[2] and spotify_tracks.get(row[2]) %}
+                        <a class="music-link" href="{{ spotify_tracks[row[2]][0][1] }}" target="_blank">{{ spotify_tracks[row[2]][0][0] }}</a>
+                        {% else %}—{% endif %}
+                    </div>
+                    <div class="text-end">
+                        <form method="POST" action="/delete_history/{{ row[0] }}" style="display:inline;">
+                            <button type="submit" class="delete-btn" title="Delete"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if not history %}
+                <div class="history-card text-center">
+                    <span class="fw-semibold">No mood history available.</span>
+                </div>
+                {% endif %}
+            </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

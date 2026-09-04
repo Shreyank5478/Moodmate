@@ -1,0 +1,8 @@
+env310/
+__pycache__/
+*.py[cod]
+*.db
+uploads/*
+!uploads/.gitkeep
+.vscode/
+.DS_Store
